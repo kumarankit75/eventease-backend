@@ -1,6 +1,12 @@
 const mongoose = require('mongoose')
 
 const VendorSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+    unique: true,
+  },
   name: {
     type: String,
     required: [true, 'Please add vendor name'],
@@ -49,6 +55,11 @@ const VendorSchema = new mongoose.Schema({
   isActive: {
     type: Boolean,
     default: true,
+  },
+  status: {
+    type: String,
+    enum: ['pending', 'approved', 'rejected'],
+    default: 'pending',
   },
 }, { timestamps: true })
 

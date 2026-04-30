@@ -13,6 +13,7 @@ const BookingSchema = new mongoose.Schema({
   email: {
     type: String,
     match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Please add a valid email'],
+    default: '',
   },
   service: {
     type: String,
@@ -40,13 +41,25 @@ const BookingSchema = new mongoose.Schema({
     enum: ['pending', 'contacted', 'confirmed', 'cancelled'],
     default: 'pending',
   },
+  // Customer who made the booking
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   },
-  vendor: {
+  // Vendor assigned by admin
+  assignedVendor: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Vendor',
+  },
+  // Admin notes
+  adminNotes: {
+    type: String,
+    default: '',
+  },
+  // Vendor notes
+  vendorNotes: {
+    type: String,
+    default: '',
   },
 }, { timestamps: true })
 
