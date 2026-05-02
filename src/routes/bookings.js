@@ -13,7 +13,6 @@ const {
 } = require('../controllers/bookingController')
 const { protect, adminOnly, vendorOnly } = require('../middleware/auth')
 
-// Optional auth middleware — attaches user if token present but doesn't block if not
 const optionalAuth = async (req, res, next) => {
   try {
     const jwt = require('jsonwebtoken')
@@ -27,7 +26,7 @@ const optionalAuth = async (req, res, next) => {
       req.user = await User.findById(decoded.id).select('-password')
     }
   } catch (err) {
-    // ignore — user just won't be attached
+    // token invalid — continue without user
   }
   next()
 }
