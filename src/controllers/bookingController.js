@@ -5,6 +5,11 @@ const createBooking = async (req, res, next) => {
   try {
     const bookingData = { ...req.body }
 
+
+        console.log('req.user:', req.user) // ← add this
+
+
+
     if (req.user) {
       bookingData.user = req.user._id
     }
@@ -20,6 +25,13 @@ const createBooking = async (req, res, next) => {
     next(error)
   }
 }
+
+
+
+
+
+
+
 
 const getAllBookings = async (req, res, next) => {
   try {
