@@ -13,7 +13,26 @@ const {
 } = require('../controllers/bookingController')
 const { protect, adminOnly, vendorOnly } = require('../middleware/auth')
 
-router.post('/', createBooking)
+// Optional auth middleware — attaches user if token present but doesn't block if not
+const optionalAuth = async (req, res, next) => {
+  try {
+    const jwt = require('jsonwebtoken')
+    const User = require('../models/User')
+    let token
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+      token = req.headers.authorization.split(' ')[1]
+    }
+    if (token) {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET)
+      req.user = await User.findById(decoded.id).select('-password')
+    }
+  } catch (err) {
+    // ignore — user just won't be attached
+  }
+  next()
+}
+
+router.post('/', optionalAuth, createBooking)
 router.get('/', protect, adminOnly, getAllBookings)
 router.get('/my-bookings', protect, vendorOnly, getVendorBookings)
 router.get('/user-bookings', protect, getUserBookings)
